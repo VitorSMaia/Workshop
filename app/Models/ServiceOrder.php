@@ -28,25 +28,12 @@ class ServiceOrder extends Model
 
     public function postServiceOrder($ServiceOrder)
     {
-        return ServiceOrder::insert([
-            "OS"            => $ServiceOrder['OS'],
-            "titulo"        => $ServiceOrder['title'],
-            "descricao"     => $ServiceOrder['description'],
-            "idMark"        => $ServiceOrder['idMark'],
-            "idModel"       => $ServiceOrder['idModel'],
-            "idCustomer"    => $ServiceOrder['idCustomer'],
-            "dtAbertura"    => $ServiceOrder['dtAbertura'],
-            "created_at"    => $ServiceOrder['dtAbertura']
-        ]);
+        return ServiceOrder::insertGetId($ServiceOrder);
     }
     public function updateServiceOrder($ServiceOrder, $id)
     {
         return ServiceOrder::where('id',$id)
-        ->update([
-            "idMark"        => $ServiceOrder['idMark'],
-            "idModel"       => $ServiceOrder['idModel'],
-            "idCustomer"    => $ServiceOrder['idCustomer']
-        ]);
+        ->update($ServiceOrder);
     }
     public function deleteServiceOrder($id)
     {

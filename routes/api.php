@@ -54,4 +54,5 @@ Route::get('/ServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@ge
 Route::post('/ServiceOrder/insertServiceOrder', 'App\Http\Controllers\ServiceOrderController@postServiceOrder');
 Route::patch('/ServiceOrder/updateServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
 Route::delete('/ServiceOrder/deleteServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@deleteServiceOrder');
+// Route::get('/ServiceOrder/generatorServiceOrder', 'App\Http\Controllers\ServiceOrderController@generatorServiceOrder');
 

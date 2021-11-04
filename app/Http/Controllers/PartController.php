@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\PartRequest;
 use App\Models\Part;
+use Carbon\Carbon;
 
 class PartController extends Controller
 {
@@ -13,7 +14,13 @@ class PartController extends Controller
         try
         {
             $Part = Part::index();
-            return response($Part,200);
+
+            if(count($Part) == 0)
+            {
+                return response('Attention, you don`t have ServiceOrders',202);
+            }else{
+                return response(json_decode($Part),200);
+            }
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
@@ -26,7 +33,12 @@ class PartController extends Controller
         try
         {
             $Part = Part::getPartById($id);
-            return response($Part,200);
+            if(count($Part) == 0)
+            {
+                return response('Attention, you don`t have ServiceOrders',202);
+            }else{
+                return response(json_decode($Part),200);
+            }
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
@@ -38,8 +50,14 @@ class PartController extends Controller
     {
         try
         {
-            $Part = Part::postPart($request);
-            return response($Part,201);
+            $Part['descricao']  = $request->description;
+            $Part['idModel']    = $request->idModel;
+            $Part['idProducer'] = $request->idProducer;
+            $Part['idMark']     = $request->idMark;
+            $Part['created_at'] = Carbon::now();
+
+            Part::postPart($Part);
+            return response('Congratulations, you created Parts with this ID',201);
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
@@ -51,8 +69,20 @@ class PartController extends Controller
     {
         try
         {
-            $Part = Part::updatePart($request,$id);
-            return response($Part,200);
+            $PartID = Part::getPartById($id);
+
+            $Part['descricao']  = $request->description;
+            $Part['idModel']    = $request->idModel;
+            $Part['idProducer'] = $request->idProducer;
+            $Part['idMark']     = $request->idMark;
+
+            if(count($PartID) == 0)
+            {
+                return response('Attention, you don`t have ServiceOrders',202);
+            }else{
+                Part::updatePart($Part,$id);
+                return response('Congratulations, you created Parts with this ID',201);
+            }
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
@@ -64,8 +94,15 @@ class PartController extends Controller
     {
         try
         {
-            $Part = Part::deletePart($id);
-            return response($Part,200);
+            if(count(Part::getPartById($id)) == 0)
+            {
+                return response('Attention, you do not have ServiceOrders with this ID: '.$id,202);
+            }
+            if(Part::deletePart($id) == 1)
+            {
+                return response('Congratulations, you deleted ServiceOrders with this ID',200);
+            }
+            return response('Danger, it was not possible to delete the ServiceOrder with this ID',405);
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
