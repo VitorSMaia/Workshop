@@ -20,6 +20,12 @@ class ServiceOrder extends Model
         return ServiceOrder::all();
     }
 
+    public function getServiceOrdetById($id)
+    {
+        return ServiceOrder::where('id',$id)
+        ->get();
+    }
+
     public function postServiceOrder($ServiceOrder)
     {
         return ServiceOrder::insert([
@@ -47,7 +53,7 @@ class ServiceOrder extends Model
         return ServiceOrder::where('id',$id)
         ->delete();
     }
-    public function GeneratedOrderService()
+    public function getOrderService()
     {
         return ServiceOrder::select('OS')
         ->get();
