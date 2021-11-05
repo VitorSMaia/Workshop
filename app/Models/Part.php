@@ -25,7 +25,7 @@ class Part extends Model
     }
     public function postPart($Part)
     {
-        return Part::insert($Part);
+        return Part::insertGetId($Part);
     }
     public function updatePart($Part,$id)
     {

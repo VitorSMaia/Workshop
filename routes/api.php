@@ -37,22 +37,21 @@ Route::post('/Model/insertModel', 'App\Http\Controllers\ModelController@postMode
 Route::patch('/Model/updateModel/{id}', 'App\Http\Controllers\ModelController@updateModel');
 Route::delete('/Model/deleteModel/{id}', 'App\Http\Controllers\ModelController@deleteModel');
 //Producer
-Route::get('/Producer', 'App\Http\Controllers\ProducerController@index');
-Route::get('/Producer/{id}', 'App\Http\Controllers\ProducerController@getProducerById');
-Route::post('/Producer/insertProducer', 'App\Http\Controllers\ProducerController@postProducer');
-Route::patch('/Producer/updateProducer/{id}', 'App\Http\Controllers\ProducerController@updateProducer');
-Route::delete('/Producer/deleteProducer/{id}', 'App\Http\Controllers\ProducerController@deleteProducer');
+Route::get(     '/Producer',        'App\Http\Controllers\ProducerController@index');
+Route::get(     '/Producer/{id}',   'App\Http\Controllers\ProducerController@getProducerById');
+Route::post(    '/Producer',        'App\Http\Controllers\ProducerController@postProducer');
+Route::patch(   '/Producer/{id}',   'App\Http\Controllers\ProducerController@updateProducer');
+Route::delete(  '/Producer/{id}',   'App\Http\Controllers\ProducerController@deleteProducer');
 //Part
-Route::get('/Part', 'App\Http\Controllers\PartController@index');
-Route::get('/Part/{id}', 'App\Http\Controllers\PartController@getPartById');
-Route::post('/Part/insertPart', 'App\Http\Controllers\PartController@postPart');
-Route::patch('/Part/updatePart/{id}', 'App\Http\Controllers\PartController@updatePart');
-Route::delete('/Part/deletePart/{id}', 'App\Http\Controllers\PartController@deletePart');
+Route::get(     '/Part',             'App\Http\Controllers\PartController@index');
+Route::get(     '/Part/{id}',        'App\Http\Controllers\PartController@getPartById');
+Route::post(    '/Part',             'App\Http\Controllers\PartController@postPart');
+Route::patch(   '/Part/{id}',        'App\Http\Controllers\PartController@updatePart');
+Route::delete(  '/Part/{id}',        'App\Http\Controllers\PartController@deletePart');
 //ServiceOrder
-Route::get('/ServiceOrder', 'App\Http\Controllers\ServiceOrderController@index');
-Route::get('/ServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@getServiceOrderById');
-Route::post('/ServiceOrder/insertServiceOrder', 'App\Http\Controllers\ServiceOrderController@postServiceOrder');
-Route::patch('/ServiceOrder/updateServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
-Route::delete('/ServiceOrder/deleteServiceOrder/{id}', 'App\Http\Controllers\ServiceOrderController@deleteServiceOrder');
-// Route::get('/ServiceOrder/generatorServiceOrder', 'App\Http\Controllers\ServiceOrderController@generatorServiceOrder');
+Route::get(     '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@index');
+Route::get(     '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@getServiceOrderById');
+Route::post(    '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@postServiceOrder');
+Route::patch(   '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
+Route::delete(  '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@deleteServiceOrder');
 

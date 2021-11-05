@@ -13,12 +13,17 @@ class ProducerController extends Controller
         try
         {
             $Producer = Producer::index();
-            return response($Producer,200);
+
+            if(!empty($Producer))
+            {
+                return response($Producer, 200);
+            }
+            return response('Attention, you don`t have Producer',202);
         }catch(Throwable $th)
         {
+            Log::info('Error in ProducerController::index');
             Log::getMenssage($th);
-            Log::info('Erro ProducerController::index');
-            return response('Erro ProducerController::index' . $th, 401);
+            return response('Error in ProducerController::index' . $th, 500);
         }
     }
     public function getProducerById($id)
@@ -26,51 +31,71 @@ class ProducerController extends Controller
         try
         {
             $Producer = Producer::getProducerById($id);
-            return response($Producer,200);
+            if(!empty($Producer))
+            {
+                return response($Producer,200);
+            }
+            return response('Attention, you don`t have Producer with ID: ' . $id,202);
         }catch(Throwable $th)
         {
+            Log::info('Error in ProducerController::getProducerById');
             Log::getMenssage($th);
-            Log::info('Erro ProducerController::getProducerById');
-            return response('Erro ProducerController::getProducerById' . $th, 401);
+            return response('Error in ProducerController::getProducerById' . getMenssage($th), 500);
         }
     }
     public function postProducer(ProducerRequest $request)
     {
         try
         {
-            $Producer = Producer::postProducer($request);
-            return response($Producer,200);
+            $Producer['descricao']  = $request->description;
+            $Producer['created_at'] = Carbon::now();
+            $ProducerID = Producer::postProducer($Producer);
+            return response("Congratulations, you created ServiceOrders with this ID: " . $ProducerID,200);
         }catch(Throwable $th)
         {
+            Log::info('Error in ProducerController::postProducer');
             Log::getMenssage($th);
-            Log::info('Erro ProducerController::postProducer');
-            return response('Erro ProducerController::postProducer' . $th, 401);
+            return response('Error in ProducerController::postProducer' . getMenssage($th), 500);
         }
     }
     public function updateProducer(ProducerRequest $request,$id)
     {
         try
         {
-            $Producer = Producer::updateProducer($request,$id);
-            return response($Producer,200);
+            $Producer = Producer::getProducerById($id);
+            $Producer['descricao']  = $request->description;
+
+            if(!empty($Producer))
+            {
+                $Producer = Producer::updateProducer($Producer,$id);
+                return response("Congratulations, you updated Producer with this ID: " . $id ,200);
+            }
+            return response('Attention, you don`t have Producer with this ID: ' . $id ,202);
         }catch(Throwable $th)
         {
-            Log::getMenssage($th);
             Log::info('Erro ProducerController::updateProducer');
-            return response('Erro ProducerController::updateProducer' . $th, 401);
+            Log::getMenssage($th);
+            return response('Erro ProducerController::updateProducer' . getMenssage($th), 500);
         }
     }
     public function deleteProducer($id)
     {
         try
         {
-            $Producer = Producer::deleteProducer($id);
-            return response($Producer,200);
+            if(empty(Producer::getProducerById($id)))
+            {
+                return response('Attention, you do not have Producer with this ID: '.$id ,202);
+            }
+            if(Producer::deleteProducer($id) == 1)
+            {
+                return response('Congratulations, you deleted Producer with this ID: ' . $id ,200);
+            }
+            return response('Danger, it was not possible to delete the Producer with this ID: ' . $id ,405);
         }catch(Throwable $th)
         {
-            Log::getMenssage($th);
             Log::info('Erro ProducerController::deleteProducer');
-            return response('Erro ProducerController::deleteProducer' . $th, 401);
+            Log::getMenssage($th);
+            return response('Erro ProducerController::deleteProducer' . getMessage($th), 500);
         }
     }
 }
