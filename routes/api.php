@@ -14,9 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+//Auth
+Route::post('auth/login', 'App\Http\Controllers\Api\AuthController@login');
+Route::post('auth/register', 'App\Http\Controllers\Api\AuthController@register');
+Route::post('auth/logout', 'App\Http\Controllers\Api\AuthController@logout');
+Route::post('auth/refresh', 'AuthController@refresh');
+Route::post('auth/me', 'AuthController@me');
+
+//Users
+Route::get('auth/users', 'App\Http\Controllers\Api\UserController@index');
 
 //Customer
 Route::get('/Customer', 'App\Http\Controllers\CustomerController@index');
@@ -43,13 +53,13 @@ Route::post(    '/Producer',        'App\Http\Controllers\ProducerController@pos
 Route::patch(   '/Producer/{id}',   'App\Http\Controllers\ProducerController@updateProducer');
 Route::delete(  '/Producer/{id}',   'App\Http\Controllers\ProducerController@deleteProducer');
 //Part
-Route::get(     '/Part',             'App\Http\Controllers\PartController@index');
+Route::get(     '/Part',             'App\Http\Controllers\PartController@index')->middleware('apiJWT');
 Route::get(     '/Part/{id}',        'App\Http\Controllers\PartController@getPartById');
 Route::post(    '/Part',             'App\Http\Controllers\PartController@postPart');
 Route::patch(   '/Part/{id}',        'App\Http\Controllers\PartController@updatePart');
 Route::delete(  '/Part/{id}',        'App\Http\Controllers\PartController@deletePart');
 //ServiceOrder
-Route::get(     '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@index');
+Route::get(     '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@index')->middleware('apiJWT');
 Route::get(     '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@getServiceOrderById');
 Route::post(    '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@postServiceOrder');
 Route::patch(   '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
