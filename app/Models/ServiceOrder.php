@@ -26,9 +26,12 @@ class ServiceOrder extends Model
         ->get();
     }
 
-    public function postServiceOrder($ServiceOrder)
+    public function postServiceOrder($ServiceOrder,$Parts)
     {
-        return ServiceOrder::insertGetId($ServiceOrder);
+
+        $idServiceOrder = ServiceOrder::insertGetId($ServiceOrder);
+        ServiceOrder_Parts::postRelation($idServiceOrder,$Parts);
+        return $idServiceOrder;
     }
     public function updateServiceOrder($ServiceOrder, $id)
     {

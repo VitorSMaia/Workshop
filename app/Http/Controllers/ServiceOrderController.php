@@ -48,6 +48,7 @@ class ServiceOrderController extends Controller
     }
     public function postServiceOrder(ServiceOrderRequest $request)
     {
+        // dd($request);
         try
         {
             $ServiceOrder['OS']             =   ServiceOrderController::generatorServiceOrder();
@@ -58,8 +59,9 @@ class ServiceOrderController extends Controller
             $ServiceOrder['idCustomer']     =   $request['idCustomer'];
             $ServiceOrder['dtAbertura']     =   Carbon::now();
             $ServiceOrder['created_at']     =   Carbon::now();
+            $Parts          =   $request['idParts'];
 
-            $ServiceOrderId = ServiceOrder::postServiceOrder($ServiceOrder);
+            $ServiceOrderId = ServiceOrder::postServiceOrder($ServiceOrder,$Parts);
             return response("Congratulations, you created ServiceOrders with this ID: " . $ServiceOrderId ,201);
         }catch(Throwable $th)
         {

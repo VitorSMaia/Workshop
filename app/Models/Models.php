@@ -23,19 +23,14 @@ class Models extends Model
         return Models::where('id',$id)
         ->get();
     }
-    public function postModels($request)
+    public function postModels($Model)
     {
-        return Models::insert([
-            "descricao" => $request->description,
-            "created_at" => Carbon::now()
-        ]);
+        return Models::insertGetId($Model);
     }
-    public function updateModels($request,$id)
+    public function updateModels($Model,$id)
     {
         return Models::where('id',$id)
-        ->update([
-            "descricao" => $request->description
-        ]);
+        ->update($Model);
     }
     public function deleteModels($id)
     {
