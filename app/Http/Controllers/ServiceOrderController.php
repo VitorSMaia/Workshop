@@ -17,15 +17,15 @@ class ServiceOrderController extends Controller
 
             if(count($ServiceOrder) == 0)
             {
-                return response('Attention, you don`t have ServiceOrders',202);
+                return response()->json(['msg' => 'Attention, you don`t have ServiceOrders'],202);
             }else{
-                return response($ServiceOrder,200);
+                return response()->json(['msg' => $ServiceOrder],200);
             }
         }catch(Throwable $th)
         {
             Log::info('Error in ServiceOrderController::index');
             Log::info(getMenssage($th));
-            return response('Error in ServiceOrderController::index' . getMenssage($th), 500);
+            return response(['msg' => 'Error in ServiceOrderController::index' . getMenssage($th)], 500);
         }
     }
     public function getServiceOrderById($id)
@@ -35,20 +35,19 @@ class ServiceOrderController extends Controller
             $ServiceOrder = ServiceOrder::getServiceOrdetById($id);
             if(count($ServiceOrder) == 0)
             {
-                return response('Attention, you don`t have ServiceOrders with this ID: ' . $id ,202);
+                return response(['msg' => 'Attention, you don`t have ServiceOrders with this ID: ' . $id ],202);
             }else{
-                return response($ServiceOrder,200);
+                return response(['msg' =>$ServiceOrder],200);
             }
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
             Log::info('Error in ServiceOrderController::getServiceOrderById');
-            return response('Error in ServiceOrderController::getServiceOrderById' . getMenssage($th), 500);
+            return response(['msg' =>'Error in ServiceOrderController::getServiceOrderById' . getMenssage($th)], 500);
         }
     }
     public function postServiceOrder(ServiceOrderRequest $request)
     {
-        // dd($request);
         try
         {
             $ServiceOrder['OS']             =   ServiceOrderController::generatorServiceOrder();
@@ -59,15 +58,15 @@ class ServiceOrderController extends Controller
             $ServiceOrder['idCustomer']     =   $request['idCustomer'];
             $ServiceOrder['dtAbertura']     =   Carbon::now();
             $ServiceOrder['created_at']     =   Carbon::now();
-            $Parts          =   $request['idParts'];
+            $Parts                          =   $request['idParts'];
 
             $ServiceOrderId = ServiceOrder::postServiceOrder($ServiceOrder,$Parts);
-            return response("Congratulations, you created ServiceOrders with this ID: " . $ServiceOrderId ,201);
+            return response(['msg' => 'Congratulations, you created ServiceOrders with this ID:' . $ServiceOrderId] ,201);
         }catch(Throwable $th)
         {
             Log::info('Error in ServiceOrderController::postServiceOrder');
             Log::info(getMenssage($th));
-            return response('Error in ServiceOrderController::postServiceOrder' . getMenssage($th), 500);
+            return response(['msg' => 'Error in ServiceOrderController::postServiceOrder' . getMenssage($th)], 500);
         }
     }
     public function updateServiceOrder(ServiceOrderRequest $request,$id)
@@ -81,7 +80,7 @@ class ServiceOrderController extends Controller
             if(count(ServiceOrder::getServiceOrdetById($id)) != 0)
             {
                 ServiceOrder::updateServiceOrder($ServiceOrder,$id);
-                return response('Congratulations, you updated ServiceOrder with this ID: ' . $id ,200);
+                return response(['msg' => 'Congratulations, you updated ServiceOrder with this ID: ' . $id],200);
             }
             return response("Atencion, it was not possible to updated the Service Order with this ID: " . $id ,202);
         }catch(Throwable $th)

@@ -19,49 +19,84 @@ use Illuminate\Support\Facades\Route;
 // });
 
 //Auth
-Route::post('auth/login', 'App\Http\Controllers\Api\AuthController@login');
-Route::post('auth/register', 'App\Http\Controllers\Api\AuthController@register');
-Route::post('auth/logout', 'App\Http\Controllers\Api\AuthController@logout');
-Route::post('auth/refresh', 'AuthController@refresh');
-Route::post('auth/me', 'AuthController@me');
+Route::prefix('auth')->group(function () {
+    Route::post('/login', 'App\Http\Controllers\Api\AuthController@login');
+    Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
+    Route::post('/logout', 'App\Http\Controllers\Api\AuthController@logout');
+    Route::post('/refresh', 'AuthController@refresh');
+    Route::post('/me', 'AuthController@me');
+});
 
 //Users
-Route::get('auth/users', 'App\Http\Controllers\Api\UserController@index');
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::get('auth/users', 'App\Http\Controllers\Api\UserController@index');
+    });
+});
 
 //Customer
-Route::get('/Customer', 'App\Http\Controllers\CustomerController@index');
-Route::get('/Customer/{id}', 'App\Http\Controllers\CustomerController@getCustomerById');
-Route::post('/Customer/insertCustomer', 'App\Http\Controllers\CustomerController@postCustomer');
-Route::patch('/Customer/updateCustomer/{id}', 'App\Http\Controllers\CustomerController@updateCustomer');
-Route::delete('/Customer/deleteCustomer/{id}', 'App\Http\Controllers\CustomerController@deleteCustomer');
-//Mark
-Route::get('/Mark', 'App\Http\Controllers\MarkController@index');
-Route::get('/Mark/{id}', 'App\Http\Controllers\MarkController@getMarkById');
-Route::post('/Mark/insertMark', 'App\Http\Controllers\MarkController@postMark');
-Route::patch('/Mark/updateMark/{id}', 'App\Http\Controllers\MarkController@updateMark');
-Route::delete('/Mark/deleteMark/{id}', 'App\Http\Controllers\MarkController@deleteMark');
-//Model
-Route::get('/Model', 'App\Http\Controllers\ModelController@index');
-Route::get('/Model/{id}', 'App\Http\Controllers\ModelController@getModelById');
-Route::post('/Model/insertModel', 'App\Http\Controllers\ModelController@postModel');
-Route::patch('/Model/updateModel/{id}', 'App\Http\Controllers\ModelController@updateModel');
-Route::delete('/Model/deleteModel/{id}', 'App\Http\Controllers\ModelController@deleteModel');
-//Producer
-Route::get(     '/Producer',        'App\Http\Controllers\ProducerController@index');
-Route::get(     '/Producer/{id}',   'App\Http\Controllers\ProducerController@getProducerById');
-Route::post(    '/Producer',        'App\Http\Controllers\ProducerController@postProducer');
-Route::patch(   '/Producer/{id}',   'App\Http\Controllers\ProducerController@updateProducer');
-Route::delete(  '/Producer/{id}',   'App\Http\Controllers\ProducerController@deleteProducer');
-//Part
-Route::get(     '/Part',             'App\Http\Controllers\PartController@index')->middleware('apiJWT');
-Route::get(     '/Part/{id}',        'App\Http\Controllers\PartController@getPartById');
-Route::post(    '/Part',             'App\Http\Controllers\PartController@postPart');
-Route::patch(   '/Part/{id}',        'App\Http\Controllers\PartController@updatePart');
-Route::delete(  '/Part/{id}',        'App\Http\Controllers\PartController@deletePart');
-//ServiceOrder
-Route::get(     '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@index')->middleware('apiJWT');
-Route::get(     '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@getServiceOrderById');
-Route::post(    '/ServiceOrder',        'App\Http\Controllers\ServiceOrderController@postServiceOrder');
-Route::patch(   '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
-Route::delete(  '/ServiceOrder/{id}',   'App\Http\Controllers\ServiceOrderController@deleteServiceOrder');
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('Customer')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\CustomerController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\CustomerController@getCustomerById');
+        Route::post(    '/',        'App\Http\Controllers\CustomerController@postCustomer');
+        Route::patch(   '/{id}',    'App\Http\Controllers\CustomerController@updateCustomer');
+        Route::delete(  '/{id}',    'App\Http\Controllers\CustomerController@deleteCustomer');
+    });
+});
 
+
+//Mark
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('Mark')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\MarkController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\MarkController@getMarkById');
+        Route::post(    '/',        'App\Http\Controllers\MarkController@postMark');
+        Route::patch(   '/{id}',    'App\Http\Controllers\MarkController@updateMark');
+        Route::delete(  '/{id}',    'App\Http\Controllers\MarkController@deleteMark');
+    });
+});
+
+//Model
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('Model')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\ModelController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\ModelController@getModelById');
+        Route::post(    '/',        'App\Http\Controllers\ModelController@postModel');
+        Route::patch(   '/{id}',    'App\Http\Controllers\ModelController@updateModel');
+        Route::delete(  '/{id}',    'App\Http\Controllers\ModelController@deleteModel');
+    });
+});
+
+//Producer
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('Producer')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\ProducerController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\ProducerController@getProducerById');
+        Route::post(    '/',        'App\Http\Controllers\ProducerController@postProducer');
+        Route::patch(   '/{id}',    'App\Http\Controllers\ProducerController@updateProducer');
+        Route::delete(  '/{id}',    'App\Http\Controllers\ProducerController@deleteProducer');
+    });
+});
+
+//Part
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('Part')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\PartController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\PartController@getPartById');
+        Route::post(    '/',        'App\Http\Controllers\PartController@postPart');
+        Route::patch(   '/{id}',    'App\Http\Controllers\PartController@updatePart');
+        Route::delete(  '/{id}',    'App\Http\Controllers\PartController@deletePart');
+    });
+});
+
+//ServiceOrder
+Route::middleware('apiJWT')->group(function () {
+    Route::prefix('ServiceOrder')->group(function () {
+        Route::get(     '/',        'App\Http\Controllers\ServiceOrderController@index');
+        Route::get(     '/{id}',    'App\Http\Controllers\ServiceOrderController@getServiceOrderById');
+        Route::post(    '/',        'App\Http\Controllers\ServiceOrderController@postServiceOrder');
+        Route::patch(   '/{id}',    'App\Http\Controllers\ServiceOrderController@updateServiceOrder');
+        Route::delete(  '/{id}',    'App\Http\Controllers\ServiceOrderController@deleteServiceOrder');
+    });
+});
