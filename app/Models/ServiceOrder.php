@@ -20,7 +20,7 @@ class ServiceOrder extends Model
         return ServiceOrder::all();
     }
 
-    public function getServiceOrdetById($id)
+    public function getServiceOrderById($id)
     {
         return ServiceOrder::where('id',$id)
         ->get();

@@ -13,13 +13,12 @@ class PartController extends Controller
     {
         try
         {
-            $Part = Part::index();
-
-            if(count($Part) != 0)
+            if(empty(Part::index()))
             {
-                return response($Part,200);
+                return response('Attention, you don`t have ServiceOrders',202);
             }
-            return response('Attention, you don`t have ServiceOrders',202);
+            return response()->json(['msg' => 'sucess', 'data' => $Part],200);
+            
         }catch(Throwable $th)
         {
             Log::info('Error in  PartController::index');
@@ -31,17 +30,16 @@ class PartController extends Controller
     {
         try
         {
-            $Part = Part::getPartById($id);
-            if(count($Part) != 0)
+            if(empty(Part::getPartById($id)))
             {
-                return response($Part,200);
+                return response()->json(['msg' => 'Attention, you don`t have ServiceOrders', 'data' => 'Not Found'],404);
             }
-            return response('Attention, you don`t have ServiceOrders',202);
+            return response()->json(['msg' => 'sucess','data' => Part::getPartById($id)],200);
         }catch(Throwable $th)
         {
-            Log::getMenssage($th);
             Log::info('Erro PartController::getPartById');
-            return response('Erro PartController::getPartById' . $th, 401);
+            Log::getMenssage($th);
+            return response('Erro PartController::getPartById' . getMenssage($th), 401);
         }
     }
     public function postPart(PartRequest $request)
@@ -55,7 +53,7 @@ class PartController extends Controller
             $Part['created_at'] = Carbon::now();
 
             $PartID = Part::postPart($Part);
-            return response('Congratulations, you created Parts with this ID: '. $PartID ,201);
+            return response()->json(['msg' => 'Congratulations, you created Parts with this ID: '. $PartID, 'data' => getPartById($PartID)] ,201);
         }catch(Throwable $th)
         {
             Log::info('Error in PartController::postPart');
@@ -67,17 +65,15 @@ class PartController extends Controller
     {
         try
         {
-            $PartID = Part::getPartById($id);
-
             $Part['descricao']  = $request->description;
             $Part['idModel']    = $request->idModel;
             $Part['idProducer'] = $request->idProducer;
             $Part['idMark']     = $request->idMark;
 
-            if(count($PartID) != 0)
+            if(!empty(Part::getPartById($id)))
             {
                 Part::updatePart($Part,$id);
-                return response('Congratulations, you updated Parts with this ID: ' . $id, 200);
+                return response()->json(['msg' => 'Congratulations, you updated Parts with this ID: ' . $id, 'data' => getPartById($id)], 200);
             }
             return response('Attention, you don`t have Parts with this ID: ' . $id ,202);
         }catch(Throwable $th)
@@ -91,15 +87,15 @@ class PartController extends Controller
     {
         try
         {
-            if(count(Part::getPartById($id)) == 0)
+            if(empty(Part::getPartById($id)))
             {
-                return response('Attention, you do not have ServiceOrders with this ID: '.$id,202);
+                return response()->json(['msg' => 'Attention, you do not have ServiceOrders with this ID: '.$id],404);
             }
             if(Part::deletePart($id) == 1)
             {
-                return response('Congratulations, you deleted ServiceOrders with this ID',200);
+                return response()-json(['msg' => 'Congratulations, you deleted ServiceOrders with this ID: ' . $id],200);
             }
-            return response('Danger, it was not possible to delete the ServiceOrder with this ID',405);
+            return response(['msg' => 'Danger, it was not possible to delete the ServiceOrder with this ID: ' . $id],405);
         }catch(Throwable $th)
         {
             Log::info('Error in PartController::deletePart');

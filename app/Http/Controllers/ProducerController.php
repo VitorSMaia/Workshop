@@ -12,30 +12,27 @@ class ProducerController extends Controller
     {
         try
         {
-            $Producer = Producer::index();
-
-            if(!empty($Producer))
+            if(!empty(Producer::index()))
             {
-                return response($Producer, 200);
+                return response()->json(['msg' => 'Sucess','data' => Producer::index()],200);
             }
-            return response('Attention, you don`t have Producer',202);
+            return response()->json(['msg' => 'Attention, you don`t have Producer','data' => 'Producers not found'],202);
         }catch(Throwable $th)
         {
             Log::info('Error in ProducerController::index');
             Log::getMenssage($th);
-            return response('Error in ProducerController::index' . $th, 500);
+            return response('Error in ProducerController::index' . getMenssage($th), 500);
         }
     }
     public function getProducerById($id)
     {
         try
         {
-            $Producer = Producer::getProducerById($id);
-            if(!empty($Producer))
+            if(!empty(Producer::getProducerById($id)))
             {
-                return response($Producer,200);
+                return response()->json(['msg' => 'Sucess','data' => Producer::getProducerById($id)],200);
             }
-            return response('Attention, you don`t have Producer with ID: ' . $id,202);
+            return response()->json(['msg' => 'Attention, you don`t have Producer by ID:' . $id,'data' => 'Producer not found'],202);
         }catch(Throwable $th)
         {
             Log::info('Error in ProducerController::getProducerById');
@@ -49,8 +46,10 @@ class ProducerController extends Controller
         {
             $Producer['descricao']  = $request->description;
             $Producer['created_at'] = Carbon::now();
+
             $ProducerID = Producer::postProducer($Producer);
-            return response("Congratulations, you created ServiceOrders with this ID: " . $ProducerID,200);
+
+            return response()->json(["Congratulations, you created ServiceOrders with this ID: " . $ProducerID, 'data' => Producer::getProducerById($ProducerID)],200);
         }catch(Throwable $th)
         {
             Log::info('Error in ProducerController::postProducer');
@@ -62,15 +61,14 @@ class ProducerController extends Controller
     {
         try
         {
-            $Producer = Producer::getProducerById($id);
             $Producer['descricao']  = $request->description;
 
-            if(!empty($Producer))
+            if(!empty(Producer::getProducerById($id)))
             {
-                $Producer = Producer::updateProducer($Producer,$id);
-                return response("Congratulations, you updated Producer with this ID: " . $id ,200);
+                Producer::updateProducer($Producer,$id);
+                return response()->json(['msg' => 'Congratulations, you updated Producer with this ID: ' . $id, 'data' => Producer::getProducerById($id)] ,200);
             }
-            return response('Attention, you don`t have Producer with this ID: ' . $id ,202);
+            return response()->json(['Attention, you don`t have Producer with this ID: ' . $id] ,202);
         }catch(Throwable $th)
         {
             Log::info('Erro ProducerController::updateProducer');
@@ -84,13 +82,13 @@ class ProducerController extends Controller
         {
             if(empty(Producer::getProducerById($id)))
             {
-                return response('Attention, you do not have Producer with this ID: '.$id ,202);
+                return response()->json(['msg' => 'Attention, you do not have Producer with this ID: '.$id, 'data' => Producer::getProducerById($id)] ,202);
             }
             if(Producer::deleteProducer($id) == 1)
             {
-                return response('Congratulations, you deleted Producer with this ID: ' . $id ,200);
+                return response()->json(['msg' => 'Congratulations, you deleted Producer with this ID: ' . $id, 'data' => 'Producer is deleted'] ,200);
             }
-            return response('Danger, it was not possible to delete the Producer with this ID: ' . $id ,405);
+            return response()->json(['msg' => 'Danger, it was not possible to delete the Producer with this ID: ' . $id],405);
         }catch(Throwable $th)
         {
             Log::info('Erro ProducerController::deleteProducer');
