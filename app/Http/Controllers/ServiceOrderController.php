@@ -9,15 +9,16 @@ use Log;
 
 class ServiceOrderController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
     public function index()
     {
         try
         {
-            if(empty(ServiceOrder::index()))
-            {
-                return response()->json(['msg' => 'Attention, you don`t have ServiceOrders','data' => 'Service Orders not found'],202);
-            }
-            return response()->json(['msg' => 'Sucess','data' => ServiceOrder::index()],200);
+            return view('service-order.list');
         }catch(Throwable $th)
         {
             Log::info('Error in ServiceOrderController::index');
@@ -143,5 +144,5 @@ class ServiceOrderController extends Controller
         }
 
     }
-    
+
 }
