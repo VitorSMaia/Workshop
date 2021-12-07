@@ -3,6 +3,9 @@
     <div class="container">
         <b-button v-b-modal.modal-add-serviceOrder>Add ServiceOrder</b-button>
     </div>
+    <div class="container">
+        <a>{{ submittedNames }}</a>
+    </div>
     <!-- Modal Insert Service Order -->
     <div>
         <b-modal
@@ -27,6 +30,7 @@
                         required
                     >
                     </b-form-input>
+                    {{ errors[0] }}
                 </b-form-group>
                 <b-form-group
                 label="Description"
@@ -41,6 +45,7 @@
                         required
                     >
                     </b-form-textarea>
+                    {{ errors[1] }}
                 </b-form-group>
                 <b-form-group
                 label="Mark"
@@ -48,38 +53,37 @@
                 invalid-feedback="Mark is required"
                 :state="markState"
                 >
-                <b-form-select v-model="mark" required :state="markState" :options="options"></b-form-select>
+                    <b-form-select
+                        v-model="mark"
+                        required
+                        :state="markState"
+                        :options="options"
+                    ></b-form-select>
                 </b-form-group>
-                <b-form-group
-                label="Model"
-                label-for="model-input"
-                invalid-feedback="Model is required"
-                :state="mdelState"
-                >
-                <b-form-select v-model="model" required :state="modelState" :options="options"></b-form-select>
+                <b-form-group label="Model" label-for="model-input" :state="modelState">
+                    <b-form-select
+                        v-model="model"
+                        required
+                        :state="modelState"
+                        :options="options"
+                    ></b-form-select>
                 </b-form-group>
-                <b-form-group
-                label="Producer"
-                label-for="producer-input"
-                invalid-feedback="Producer is required"
-                :state="producerState"
-                >
-                <b-form-select v-model="producer" required :state="producerState" :options="options"></b-form-select>
+                <b-form-group label="Producer" label-for="producer-input" :state="producerState">
+                    <b-form-select
+                        v-model="producer"
+                        required
+                        :state="producerState"
+                        :options="options"
+                    ></b-form-select>
                 </b-form-group>
-                <b-form-group
-                label="Parts"
-                label-for="part-input"
-                invalid-feedback="Parts is required"
-                :state="partState"
-                >
-                <b-form-checkbox-group
-                    id="checkbox-group-1"
-                    v-model="selectedCheck"
-                    :options="optionsCheck"
-                    :aria-describedby="ariaDescribedby"
-                    :state="partState"
-                    name="flavour-1"
-                ></b-form-checkbox-group>
+                <b-form-group label="Using options array:" v-slot="{ ariaDescribedby }">
+                    <b-form-checkbox-group
+                        id="checkbox-group-1"
+                        v-model="selectedCheck"
+                        :options="optionsCheck"
+                        :aria-describedby="ariaDescribedby"
+                        name="flavour-1"
+                    ></b-form-checkbox-group>
                 </b-form-group>
             </form>
         </b-modal>
@@ -91,9 +95,9 @@
     export default {
         data() {
             return {
+                errors: '',
                 title: '',
                 titleState: null,
-                submittedNames: [],
                 description: '',
                 descriptionState: null,
                 mark: null,
@@ -102,6 +106,7 @@
                 modelState: null,
                 producer: null,
                 producerState: null,
+                selectedCheck: [],
                 options: [
                     { value: null, text: 'Please select an option' },
                     { value: 'a', text: 'This is First option' },
@@ -114,19 +119,27 @@
                     { text: 'Apple', value: 'apple' },
                     { text: 'Pineapple', value: 'pineapple' },
                     { text: 'Grape', value: 'grape' }
-                ]
+                ],
+                submittedNames: [
+                    {
+                    }
+                ],
             }
         },
         methods: {
-            checkFormValidity() {
-                const valid = this.$refs.form.checkValidity()
-                this.titleState = valid
-                this.descriptionState = valid
-                this.markState = valid
-                this.modelState = valid
-                this.producerState = valid
-                this.partState = valid
-                return valid
+            checkFormValidity(e) {
+                this.errors = [];
+                if(!this.title)
+                    this.errors.push("Title required.");
+                if(!this.description)
+                    this.errors.push("Description required.");
+
+                if(this.title != '' && this.description != '')
+                {
+                    this.errors = '';
+                    return true;
+                }
+                e.preventDefault();
             },
             resetModal() {
                 this.title = ''
@@ -139,7 +152,7 @@
                 this.modelState = null,
                 this.producer = null,
                 this.producerState = null,
-                this.selectedCheck = null
+                this.selectedCheck = []
             },
             handleOk(bvModalEvt) {
                 // Prevent modal from closing
@@ -150,13 +163,18 @@
             handleSubmit() {
                 // Exit when the form isn't valid
                 if (!this.checkFormValidity()) {
-                return
+                    return
                 }
                 // Push the name to submitted names
-                this.submittedNames.push(this.name)
+                this.submittedNames.push(
+                    {
+                        'title':this.title,
+                        'desc':this.description
+                    }
+                )
                 // Hide the modal manually
                 this.$nextTick(() => {
-                this.$bvModal.hide('modal-prevent-closing')
+                    this.$bvModal.hide('modal-add-serviceOrder')
                 })
             }
         }
