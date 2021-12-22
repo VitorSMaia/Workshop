@@ -68,14 +68,6 @@
                         :options="options"
                     ></b-form-select>
                 </b-form-group>
-                <b-form-group label="Producer" label-for="producer-input" :state="producerState">
-                    <b-form-select
-                        v-model="producer"
-                        required
-                        :state="producerState"
-                        :options="options"
-                    ></b-form-select>
-                </b-form-group>
                 <b-form-group label="Using options array:" v-slot="{ ariaDescribedby }">
                     <b-form-checkbox-group
                         id="checkbox-group-1"
@@ -104,15 +96,13 @@
                 markState: null,
                 model: null,
                 modelState: null,
-                producer: null,
-                producerState: null,
                 selectedCheck: [],
                 options: [
-                    { value: null, text: 'Please select an option' },
-                    { value: 'a', text: 'This is First option' },
-                    { value: 'b', text: 'Selected Option' },
-                    { value: { C: '3PO' }, text: 'This is an option with object value' },
-                    { value: 'd', text: 'This one is disabled', disabled: true }
+                    { value: 'Aston Martin',    text: 'Aston Martin' },
+                    { value: 'Audi',            text: 'Audi' },
+                    { value: 'Bentley',         text: 'Bentley' },
+                    { value: 'BMW',             text: 'BMW' },
+                    { value: 'Bugatti',         text: 'Bugatti' }
                 ],
                 optionsCheck: [
                     { text: 'Orange', value: 'orange' },
@@ -150,8 +140,6 @@
                 this.markState = null,
                 this.model = null,
                 this.modelState = null,
-                this.producer = null,
-                this.producerState = null,
                 this.selectedCheck = []
             },
             handleOk(bvModalEvt) {
@@ -169,7 +157,10 @@
                 this.submittedNames.push(
                     {
                         'title':this.title,
-                        'desc':this.description
+                        'desc':this.description,
+                        'mark':this.mark,
+                        'model':this.model,
+                        'parts':this.selectedCheck
                     }
                 )
                 // Hide the modal manually

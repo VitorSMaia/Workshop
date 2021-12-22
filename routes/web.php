@@ -23,6 +23,10 @@ Route::get('/', function () {
 //  });
 
  Route::get('/serviceorder', [App\Http\Controllers\ServiceOrderController::class, 'index'])->name('serviceorder');
+ Route::get('/model', [App\Http\Controllers\ModelController::class, 'index'])->name('model');
+ Route::get('/mark', [App\Http\Controllers\MarkController::class, 'index'])->name('mark');
+ Route::post('/mark', [App\Http\Controllers\MarkController::class, 'postMark']);
+ Route::get('/mark/all', [App\Http\Controllers\MarkController::class, 'listMarks']);
 
 //  Route::get('/viewlogin','App\Http\Controllers\Auth\AuthController@viewlogin');
 

@@ -14,7 +14,7 @@ class Mark extends Model
     protected $connection = 'mysql';
     protected $table = 'mark';
 
-    public function index()
+    public static function index()
     {
         return Mark::all();
     }
@@ -23,11 +23,12 @@ class Mark extends Model
         return Mark::where('id',$id)
         ->get();
     }
-    public function postMark($request)
+    public static function postMark($description)
     {
-        return Mark::insert([
-            "descricao" => $request->description,
-            "created_at" => Carbon::now()
+        return Mark::insertGetId([
+            "descricao" => $description,
+            "created_at" => Carbon::now(),
+            "updated_at" => Carbon::now()
         ]);
     }
     public function updateMark($request,$id)

@@ -13,12 +13,7 @@ class ModelController extends Controller
     {
         try
         {
-            $Model = Models::index();
-            if(!empty($Model))
-            {
-                return response($model,200);
-            }
-            return response('Attention, you don`t have Models',202);
+            return view('model');
         }catch(Throwable $th)
         {
             Log::info('Error in ModelController::index');

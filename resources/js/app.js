@@ -22,6 +22,8 @@ window.Vue = require('vue').default;
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 // Vue.component('home-component', require('./components/HomeComponent.vue').default);
 Vue.component('service-component', require('./components/ServiceComponent.vue').default);
+Vue.component('mark-component', require('./components/MarkComponent.vue').default);
+Vue.component('model-component', require('./components/ModelComponent.vue').default);
 // Vue.component('login-component', require('./components/LoginComponent.vue').default);
 
 import Vue from 'vue'

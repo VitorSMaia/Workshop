@@ -10,16 +10,7 @@ class MarkController extends Controller
 {
     public function index()
     {
-        try
-        {
-            $mark = Mark::index();
-            return response($mark,200);
-        }catch(Throwable $th)
-        {
-            Log::getMenssage($th);
-            Log::info('Erro MarkController::index');
-            return response('Erro MarkController::index' . $th, 401);
-        }
+        return view('mark');
     }
     public function getMarkById($id)
     {
@@ -34,12 +25,15 @@ class MarkController extends Controller
             return response('Erro MarkController::getMarkById' . $th, 401);
         }
     }
+    public static function listMarks()
+    {
+        return response(Mark::index(),200);
+    }
     public function postMark(MarkRequest $request)
     {
         try
         {
-            $mark = Mark::postMark($request);
-            return response($mark,200);
+            return response(Mark::postMark($request['description']),200);
         }catch(Throwable $th)
         {
             Log::getMenssage($th);
