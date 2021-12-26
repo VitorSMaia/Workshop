@@ -12,7 +12,6 @@
 			<b-button size="sm" class="mr-2" variant="info" v-on:click="editarMark(listMark.item.id)">Editar</b-button>
 			<b-button size="sm" variant="danger" v-on:click="excluir(listMark.id)">Excluir</b-button>
 		</template>
-
     </b-table>
   </div>
     <!-- Modal Insert Service Order -->
