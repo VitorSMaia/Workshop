@@ -62,7 +62,7 @@
                 >
                     <b-form-input
                         id="description-input"
-                        v-model="description"
+                        v-model="teste"
                         :state="descriptionState"
                         required
                     >
@@ -84,8 +84,10 @@
                 description: '',
                 descriptionState: null,
                 listMark: [],
+                i:0,
                 submittedNames: [
                 ],
+                teste: "fddfs",
                 listfields: [
                     {
                         key: 'id',
@@ -171,16 +173,20 @@
                 })
             },
             // +++++++++++++++++ Add Modal 
-            // +++++++++++++++++ Add Modal 
-            editarMark(id)
+            // +++++++++++++++++ Edit Modal 
+            editarMark(id,i)
             {
                 this.$bvModal.show("modal-edit-mark")
 
                 function isCherries(id) {
-                    return id === this.listMark.id;
+                    for(i = 0; i < 1; i++){
+                        // if(this.listMark[i].id === id){
+                        //     return 'this.listMark[i]'
+                        // }
+                        console.log(this.listMark[i].id)
+                    }
                 }
-                console.log(this.listMark.find(isCherries))
-                console.log(id)
+                console.log(isCherries(1))
                 // document.getElementById("description-input").value = "Johnny Bravo";
 
             }
