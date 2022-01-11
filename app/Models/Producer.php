@@ -24,19 +24,14 @@ class Producer extends Model
         return Producer::where('id',$id)
         ->get();
     }
-    public function postProducer($request)
+    public function postProducer($Produce)
     {
-        return Producer::insert([
-            "descricao" => $request->description,
-            "created_at" => Carbon::now()
-        ]);
+        return Producer::insertGetId($Produce);
     }
-    public function updateProducer($request,$id)
+    public function updateProducer($Produce,$id)
     {
         return Producer::where('id',$id)
-        ->update([
-            "descricao" => $request->description
-        ]);
+        ->update($Produce);
     }
     public function deleteProducer($id)
     {

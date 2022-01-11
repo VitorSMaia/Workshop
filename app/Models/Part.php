@@ -23,25 +23,14 @@ class Part extends Model
         return Part::where('id',$id)
         ->get();
     }
-    public function postPart($request)
+    public function postPart($Part)
     {
-        return Part::insert([
-            "descricao"     => $request->description,
-            "idModel"       => $request->idModel,
-            "idProducer"    => $request->idProducer,
-            "idMark"        => $request->idMark,
-            "created_at"    => Carbon::now()
-        ]);
+        return Part::insertGetId($Part);
     }
-    public function updatePart($request,$id)
+    public function updatePart($Part,$id)
     {
         return Part::where('id',$id)
-        ->update([
-            "descricao"     => $request->description,
-            "idModel"       => $request->idModel,
-            "idProducer"    => $request->idProducer,
-            "idMark"        => $request->idMark
-        ]);
+        ->update($Part);
     }
     public function deletePart($id)
     {

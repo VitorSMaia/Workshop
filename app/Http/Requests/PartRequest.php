@@ -24,10 +24,10 @@ class PartRequest extends FormRequest
     public function rules()
     {
         return [
-            'description'    => 'required',
-            'idModel'        => 'required',
-            'idProducer'    => 'required',
-            'idMark'    => 'required',
+            'description'       => 'required',
+            'idModel'           => 'required',
+            'idProducer'        => 'required',
+            'idMark'            => 'required',
         ];
     }
 

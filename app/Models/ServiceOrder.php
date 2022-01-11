@@ -20,34 +20,30 @@ class ServiceOrder extends Model
         return ServiceOrder::all();
     }
 
-    public function postServiceOrder($ServiceOrder)
+    public function getServiceOrderById($id)
     {
-        return ServiceOrder::insert([
-            "OS"            => $ServiceOrder['OS'],
-            "titulo"        => $ServiceOrder['title'],
-            "descricao"     => $ServiceOrder['description'],
-            "idMark"        => $ServiceOrder['idMark'],
-            "idModel"       => $ServiceOrder['idModel'],
-            "idCustomer"    => $ServiceOrder['idCustomer'],
-            "dtAbertura"    => $ServiceOrder['dtAbertura'],
-            "created_at"    => $ServiceOrder['dtAbertura']
-        ]);
+        return ServiceOrder::where('id',$id)
+        ->get();
+    }
+
+    public function postServiceOrder($ServiceOrder,$Parts)
+    {
+
+        $idServiceOrder = ServiceOrder::insertGetId($ServiceOrder);
+        ServiceOrder_Parts::postRelation($idServiceOrder,$Parts);
+        return $idServiceOrder;
     }
     public function updateServiceOrder($ServiceOrder, $id)
     {
         return ServiceOrder::where('id',$id)
-        ->update([
-            "idMark"        => $ServiceOrder['idMark'],
-            "idModel"       => $ServiceOrder['idModel'],
-            "idCustomer"    => $ServiceOrder['idCustomer']
-        ]);
+        ->update($ServiceOrder);
     }
     public function deleteServiceOrder($id)
     {
         return ServiceOrder::where('id',$id)
         ->delete();
     }
-    public function GeneratedOrderService()
+    public function getOrderService()
     {
         return ServiceOrder::select('OS')
         ->get();

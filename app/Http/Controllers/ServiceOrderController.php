@@ -9,98 +9,140 @@ use Log;
 
 class ServiceOrderController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+
     public function index()
     {
         try
         {
-            $ServiceOrder = ServiceOrder::index();
-            return response($ServiceOrder,200);
+            return view('service-order.list');
         }catch(Throwable $th)
         {
-            Log::getMenssage($th);
-            Log::info('Erro ServiceOrderController::index');
-            return response('Erro ServiceOrderController::index' . $th, 401);
+            Log::info('Error in ServiceOrderController::index');
+            Log::info(getMenssage($th));
+            return response('Error in ServiceOrderController::index' . getMenssage($th), 500);
         }
     }
+
     public function getServiceOrderById($id)
     {
         try
         {
-            $ServiceOrder = ServiceOrder::getServiceOrderById($id);
-            return response($ServiceOrder,200);
+            if(empty(ServiceOrder::getServiceOrderById($id)))
+            {
+                return response(['msg' => 'Attention, you don`t have Service Order with this ID: ' . $id, 'data' => 'Service Order not found'],202);
+            }
+            return response(['msg' => 'success','data' => ServiceOrder::getServiceOrderById($id)],200);
         }catch(Throwable $th)
         {
+            Log::info('Error in ServiceOrderController::getServiceOrderById');
             Log::getMenssage($th);
-            Log::info('Erro ServiceOrderController::getServiceOrderById');
-            return response('Erro ServiceOrderController::getServiceOrderById' . $th, 401);
+            return response('Error in ServiceOrderController::getServiceOrderById' . getMenssage($th), 500);
         }
     }
+
     public function postServiceOrder(ServiceOrderRequest $request)
     {
         try
         {
-            $OrdemService                   =   ServiceOrderController::generatorServiceOrder();
-            $ServiceOrder['OS']             =   $OrdemService;
-            $ServiceOrder['title']          =   $request['title'];
-            $ServiceOrder['description']    =   $request['description'];
+            $ServiceOrder['OS']             =   ServiceOrderController::generatorServiceOrder();
+            $ServiceOrder['titulo']         =   $request['title'];
+            $ServiceOrder['descricao']      =   $request['description'];
             $ServiceOrder['idMark']         =   $request['idMark'];
             $ServiceOrder['idModel']        =   $request['idModel'];
             $ServiceOrder['idCustomer']     =   $request['idCustomer'];
             $ServiceOrder['dtAbertura']     =   Carbon::now();
+            $ServiceOrder['created_at']     =   Carbon::now();
+            $Parts                          =   $request['idParts'];
 
-            ServiceOrder::postServiceOrder($ServiceOrder);
-            return response("ServiceOrder Created Success",201);
+            return response(['msg' => 'Congratulations, you created ServiceOrders with this ID:' . ServiceOrder::postServiceOrder($ServiceOrder,$Parts), 'data' => $ServiceOrder] ,201);
         }catch(Throwable $th)
         {
-            Log::getMenssage($th);
-            Log::info('Erro ServiceOrderController::postServiceOrder');
-            return response('Erro ServiceOrderController::postServiceOrder' . $th, 401);
+            Log::info('Error in ServiceOrderController::postServiceOrder');
+            Log::info(getMenssage($th));
+            return response('Error in ServiceOrderController::postServiceOrder' . getMenssage($th), 500);
         }
     }
+
     public function updateServiceOrder(ServiceOrderRequest $request,$id)
     {
         try
-        {   
-            $ServiceOrder['description']    =   $request['description'];
-            $ServiceOrder['idMark']         =   $request['idMark'];
-            $ServiceOrder['idModel']        =   $request['idModel'];
-            $ServiceOrder['idCustomer']     =   $request['idCustomer'];
-            ServiceOrder::updateServiceOrder($ServiceOrder,$id);
-            return response("ServiceOrder Updated Success",201);
-        }catch(Throwable $th)
         {
-            Log::getMenssage($th);
-            Log::info('Erro ServiceOrderController::updateServiceOrder');
-            return response('Erro ServiceOrderController::updateServiceOrder' . $th, 401);
+            $ServiceOrder['titulo']        =   $request['title'];
+            $ServiceOrder['descricao']     =   $request['description'];
+            $ServiceOrder['idMark']        =   $request['idMark'];
+            $ServiceOrder['idModel']       =   $request['idModel'];
+            $ServiceOrder['idCustomer']    =   $request['idCustomer'];
+
+            if(!empty(ServiceOrder::getServiceOrderById($id)))
+            {
+                ServiceOrder::updateServiceOrder($ServiceOrder,$id);
+                $ServiceOrderUpdated = ServiceOrder::getServiceOrderById($id);
+                return response()->json(['msg' => 'Congratulations, you updated ServiceOrder with this ID: ' . $id, 'data' => $ServiceOServiceOrderUpdatedrderNew],200);
+            }
+            return response()->json(['msg' => 'Atencion, it was not possible to updated the Service Order with this ID: '.$id],202);
+        }
+        catch(Throwable $th)
+        {
+            Log::info('Error in ServiceOrderController::updateServiceOrder');
+            Log::info(getMenssage($th));
+            return response('Error in ServiceOrderController::updateServiceOrder' . getMenssage($th) ,500);
         }
     }
+
     public function deleteServiceOrder($id)
     {
         try
         {
-            $ServiceOrder = ServiceOrder::deleteServiceOrder($id);
-            return response($ServiceOrder,200);
-        }catch(Throwable $th)
+            if(empty(ServiceOrder::getServiceOrdetById($id)))
+            {
+                return response()->json(['msg' => 'Attention, you do not have ServiceOrders with this ID: '.$id] ,202);
+            }
+            else if(ServiceOrder::deleteServiceOrder($id) == 1)
+            {
+                return response()->json(['msg' => 'Congratulations, you deleted ServiceOrders with this ID: ' . $id] ,200);
+            }
+            return response()->json(['msg' => 'Danger, it was not possible to delete the ServiceOrder with this ID: ' . $id] ,405);
+        }
+        catch(Throwable $th)
         {
-            Log::getMenssage($th);
-            Log::info('Erro ServiceOrderController::deleteServiceOrder');
-            return response('Erro ServiceOrderController::deleteServiceOrder' . $th, 401);
+            Log::info('Error in ServiceOrderController::deleteServiceOrder');
+            Log::info(getMenssage($th));
+            return response('Error in ServiceOrderController::deleteServiceOrder' . getMenssage($th), 401);
         }
     }
+
     public function generatorServiceOrder()
     {
-
-        $GeneratedOrderService = ServiceOrder::GeneratedOrderService();
-
-        for($i = 0; $i <= count($GeneratedOrderService); $i++)
+        try
         {
-            $OrdemService = rand(1000,99000);
-            $OrdemService = Carbon::now()->format('Ymd') . $OrdemService;
-            if($OrdemService != $GeneratedOrderService[$i]['OS'])
+            $GeneratedOrderService = ServiceOrder::getOrderService();
+
+            if(count($GeneratedOrderService) != 0)
             {
+                for($i = 0; $i <= count($GeneratedOrderService); $i++)
+                {
+                    $OrdemService = Carbon::now()->format('Ymdhis');
+                    if($OrdemService != $GeneratedOrderService[$i]['OS'])
+                    {
+                        return $OrdemService;
+                    }
+                }
+            }else{
+                $OrdemService = Carbon::now()->format('Ymdhis');
                 return $OrdemService;
             }
         }
+        catch(Throwable $th)
+        {
+            Log::info('ServiceOrderController::generatorServiceOrder');
+            Log::info(getMenssage($th));
+            return response('Error in ServiceOrderController::generatorServiceOrder' . getMenssage($th), 401);
+        }
 
     }
+
 }
